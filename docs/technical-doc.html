@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>世界神话史 · 星穹图志 — 技术文档</title>
+<style>
+  @page {
+    size: A4;
+    margin: 20mm 18mm 18mm 18mm;
+  }
+  @page :first { margin: 0; }
+
+  :root{
+    --ink:#1a1a1f;
+    --ink2:#3a3a44;
+    --muted:#6b6b78;
+    --line:#d8d3c8;
+    --gold:#a9803a;
+    --gold-soft:#f3ead8;
+    --paper:#fffefb;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Source Han Serif SC","Songti SC","STSong",SimSun,"Noto Serif SC",serif;
+    font-size:10.2pt;
+    line-height:1.85;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  /* ---------- 封面 ---------- */
+  .cover{
+    height:297mm; padding:38mm 24mm 24mm;
+    background:linear-gradient(160deg,#0c0a18 0%,#170e30 46%,#241546 100%);
+    color:#f3ead8; display:flex; flex-direction:column; justify-content:space-between;
+    page-break-after:always;
+  }
+  .cover .mark{
+    width:54px;height:54px;border:1.5px solid rgba(243,212,155,.55);border-radius:50%;
+    display:grid;place-items:center;font-size:22px;color:#f3d49b;letter-spacing:2px;
+  }
+  .cover h1{ font-size:34pt; font-weight:400; letter-spacing:.14em; margin:22mm 0 6mm; line-height:1.3; }
+  .cover .sub{ font-size:12pt; letter-spacing:.3em; color:#c9b48a; text-transform:uppercase; }
+  .cover .cn-sub{ font-size:13pt; letter-spacing:.24em; color:#e7dcc4; margin-top:4mm; }
+  .cover .rule{ width:64mm;height:1px;background:rgba(243,212,155,.4); margin:10mm 0; }
+  .cover .meta{ font-size:9.6pt; line-height:2.1; color:#bfb2d0; letter-spacing:.06em; }
+  .cover .meta b{ color:#f3d49b; font-weight:400; letter-spacing:.14em; }
+
+  /* ---------- 正文 ---------- */
+  .page{ page-break-after:always; }
+  h2{
+    font-size:15pt; font-weight:400; letter-spacing:.12em; margin:0 0 4mm;
+    padding-bottom:2.6mm; border-bottom:1px solid var(--line);
+    page-break-after:avoid;
+  }
+  h2 .no{ color:var(--gold); font-size:10pt; letter-spacing:.2em; margin-right:3mm; }
+  h3{ font-size:11.4pt; font-weight:600; margin:7mm 0 2.4mm; letter-spacing:.06em; page-break-after:avoid; }
+  h4{ font-size:10.2pt; font-weight:600; margin:5mm 0 1.6mm; color:var(--ink2); page-break-after:avoid; }
+  p{ margin:0 0 3mm; text-align:justify; }
+  ul,ol{ margin:0 0 3mm; padding-left:6mm; }
+  li{ margin:0 0 1.4mm; }
+  strong{ font-weight:600; color:#111; }
+  .lead{ font-size:10.6pt; color:var(--ink2); }
+  .muted{ color:var(--muted); }
+  code{
+    font-family:Consolas,"Courier New",monospace; font-size:9pt;
+    background:#f4f1ea; padding:.5mm 1.4mm; border-radius:2px; color:#5a4324;
+  }
+  pre{
+    font-family:Consolas,"Courier New",monospace; font-size:8.6pt; line-height:1.6;
+    background:#f7f5ef; border:1px solid #e6e1d5; border-left:2.5px solid var(--gold);
+    padding:3mm 4mm; margin:0 0 3.4mm; white-space:pre-wrap; page-break-inside:avoid;
+  }
+  table{
+    width:100%; border-collapse:collapse; font-size:9pt; margin:0 0 4mm;
+    page-break-inside:avoid;
+  }
+  th,td{ border:1px solid var(--line); padding:1.8mm 2.4mm; text-align:left; vertical-align:top; }
+  th{ background:#f6f2e9; font-weight:600; color:#4a3a24; letter-spacing:.04em; }
+  td.n{ text-align:right; white-space:nowrap; }
+  .cap{ font-size:8.4pt; color:var(--muted); text-align:center; margin:-1mm 0 4mm; letter-spacing:.06em; }
+  .box{
+    border:1px solid var(--line); background:#fbf9f3; padding:3.2mm 4mm; margin:0 0 4mm;
+    page-break-inside:avoid;
+  }
+  .box .t{ font-size:9pt; letter-spacing:.16em; color:var(--gold); margin-bottom:1.6mm; }
+  .kv{ font-size:9.2pt; }
+  .kv span{ color:var(--muted); display:inline-block; min-width:24mm; }
+  figure{ margin:0 0 4mm; page-break-inside:avoid; text-align:center; }
+  svg{ max-width:100%; height:auto; }
+  .toc{ font-size:10pt; }
+  .toc li{ list-style:none; display:flex; justify-content:space-between; border-bottom:1px dotted #d8d3c8; padding:1.5mm 0; }
+  .toc ul{ padding-left:0; }
+  .toc .s{ color:var(--gold); margin-right:3mm; font-size:9pt; letter-spacing:.14em; }
+  .tag{ display:inline-block; font-size:8.2pt; letter-spacing:.12em; color:#7a5a22;
+        background:var(--gold-soft); border:1px solid #e3d3b0; padding:.4mm 2mm; border-radius:2px; margin-right:1.6mm; }
+  .two{ column-count:2; column-gap:8mm; }
+  .small{ font-size:9pt; }
+</style>
+</head>
+<body>
+
+<!-- ================= 封面 ================= -->
+<section class="cover">
+  <div class="mark">志</div>
+
+  <div>
+    <div class="sub">Technical Documentation</div>
+    <h1>世界神话史 · 星穹图志</h1>
+    <div class="cn-sub">MYTHOGRAPHIA MVNDI</div>
+    <div class="rule"></div>
+    <div class="meta">
+      一个可以「问」、也可以「走」的世界神话史站点<br>
+      六大神话体系 · 三十六处圣地 · 六座程序化圣殿
+    </div>
+  </div>
+
+  <div class="meta">
+    <b>文档版本</b>　v1.0　　　<b>日期</b>　2026 年 10 月<br>
+    <b>团队</b>　Mythographia Team<br>
+    <b>形态</b>　单页静态站点 + Serverless 函数（零运行时依赖）<br>
+    <b>篇幅</b>　正文 8 章 · 4 幅架构图 · 12 张表
+  </div>
+</section>
+
+<!-- ================= 目录 ================= -->
+<section class="page">
+  <h2><span class="no">CONTENTS</span>目录</h2>
+  <div class="toc">
+    <ul>
+      <li><span><span class="s">01</span>项目概述</span><span class="muted">背景 · 目标 · 成果概览</span></li>
+      <li><span><span class="s">02</span>需求分析</span><span class="muted">用户场景 · 功能与非功能需求</span></li>
+      <li><span><span class="s">03</span>系统架构设计</span><span class="muted">四卷结构 · 边界隔离 · 渲染管线 · 数据模型</span></li>
+      <li><span><span class="s">04</span>AI 技术方案</span><span class="muted">选型理由 · 知识库 · 集成 · 优化 · 评测</span></li>
+      <li><span><span class="s">05</span>核心功能实现</span><span class="muted">星穹 · 圣殿 · 地图 · 图志 · 装载器 · 体积工程</span></li>
+      <li><span><span class="s">06</span>测试与部署</span><span class="muted">测试策略 · 用例结果 · 上线流程 · 运维</span></li>
+      <li><span><span class="s">07</span>创新点说明</span><span class="muted">技术创新 · 应用创新 · 对比</span></li>
+      <li><span><span class="s">08</span>总结与展望</span><span class="muted">成果 · 局限 · 后续路线</span></li>
+    </ul>
+  </div>
+
+  <div class="box" style="margin-top:10mm">
+    <div class="t">阅读指引</div>
+    <p class="small" style="margin:0">
+      第 1–3 章说明「做了什么、为什么这么做」；第 4 章是评审核对 AI 方案的重点，单独说明选型、集成与优化；
+      第 5 章给出关键实现与取舍；第 6、7 章对应可复现的测试与创新点。全部数值均来自本机实测，未做估算修饰。
+    </p>
+  </div>
+</section>
+
+<!-- ================= 1 项目概述 ================= -->
+<section class="page">
+  <h2><span class="no">01</span>项目概述</h2>
+
+  <h3>1.1 背景</h3>
+  <p class="lead">
+    一个站在帕特农神庙前的旅行者，通常能看到的只有「石头」：一堆柱子、一段台阶、一片残破的山花。他很少知道，这些柱子的比例是给一位处女神量出来的；台基中央故意上凸、角柱故意加粗，是为了对抗人眼的错觉。
+  </p>
+  <p>
+    神话解释「为什么建」，建筑记录「怎么建」，而这两件事在通行资料里通常被分开讲述：神话读物止步于故事，建筑史止步于形制。结果是——
+    读者知道了宙斯的故事，却不知道奥林匹亚那座神庙的柱子为什么是六根；知道了封禅，却不知道天贶殿为什么用重檐歇山。
+  </p>
+  <p>
+    本项目的出发点很具体：<strong>把「神话 → 圣地 → 建筑形制」缝成一条可以走完的线</strong>。每一个神话节点，最终都要落在一处真实存在的建筑构件上：
+    柱式、屋顶、轴线、材料、朝向。没有泛泛的「值得一去」，只有「站在这里抬头看什么」。
+  </p>
+
+  <h3>1.2 项目目标</h3>
+  <table>
+    <tr><th style="width:26%">目标</th><th>具体定义</th><th style="width:22%">验收口径</th></tr>
+    <tr><td>内容完整性</td><td>覆盖六大神话体系，每域 6 处关键圣地，共 36 站；每站包含神话叙述、建筑形制、起源地推荐三段</td><td>36 站数据齐全，实景照片 36 张</td></tr>
+    <tr><td>可交互性</td><td>用户可「问」（AI 问答）也可「走」（三幕式圣地旅程）</td><td>问答可用；旅程四幕可完整走通</td></tr>
+    <tr><td>可传播性</td><td>单文件、零外部依赖、断网可用（除 AI 提问）</td><td>零外链；双击即开</td></tr>
+    <tr><td>安全性</td><td>API 密钥不出现在前端</td><td>源码检索无密钥；仅同源代理</td></tr>
+  </table>
+
+  <h3>1.3 成果概览</h3>
+  <table>
+    <tr><th style="width:24%">维度</th><th>成果</th></tr>
+    <tr><td>站点结构</td><td>四卷：壹星穹 / 贰谱系 / 叁图版 / 肆旅程，共享同一套顶栏与翻页</td></tr>
+    <tr><td>神话体系</td><td>希腊罗马 · 埃及 · 中国 · 日本 · 爱尔兰 · 凯尔特</td></tr>
+    <tr><td>圣地数据</td><td>36 站，含坐标、年代、神话正文、三条建筑形制要点、起源地推荐</td></tr>
+    <tr><td>程序化建筑</td><td>六座 CSS 3D 圣殿：帕特农 / 大金字塔 / 天贶殿 / 伊势神明造 / 纽格莱奇 / 巨石阵</td></tr>
+    <tr><td>实景素材</td><td>36 张 Wikimedia Commons 实景，全部为 CC0 / CC BY / CC BY-SA / 公有领域</td></tr>
+    <tr><td>交付形态</td><td><code>index.html</code> 2.3 MB（单文件全站）+ <code>api/chat.js</code>（AI 代理）</td></tr>
+    <tr><td>AI 能力</td><td>基于 Dify 知识库应用的检索增强问答，答案回链到图版编号</td></tr>
+  </table>
+
+  <h3>1.4 本文档结构</h3>
+  <p>
+    第 2 章从使用者与场景倒推需求，并说明由此产生的取舍；第 3 章给出架构与边界设计；第 4 章完整说明 AI 方案的选型理由、集成方式与优化策略；
+    第 5 章进入实现细节并标注关键「坑」；第 6 章给出可复现的测试方法与部署流程；第 7 章归纳创新点；第 8 章说明局限与路线。
+  </p>
+</section>
+
+<!-- ================= 2 需求分析 ================= -->
+<section class="page">
+  <h2><span class="no">02</span>需求分析</h2>
+
+  <h3>2.1 用户与使用场景</h3>
+  <table>
+    <tr><th style="width:20%">用户</th><th style="width:30%">场景</th><th>核心诉求</th></tr>
+    <tr><td>行前读者</td><td>计划去希腊 / 埃及 / 日本，想先弄懂「要看什么」</td><td>某一处遗址的建筑看点，能在 5 分钟内读完</td></tr>
+    <tr><td>在途旅人</td><td>站在遗址前，想确认眼前构件的名字与来历</td><td>手机上打开、不依赖网络、图与文字能对上</td></tr>
+    <tr><td>学生与爱好者</td><td>横向比较不同文明对同一母题（墓、柱、门）的处理</td><td>跨域对照、可检索、来源可靠</td></tr>
+    <tr><td>评审与传播</td><td>评委/朋友在离线或弱网环境打开一个文件</td><td>单文件、无安装、无依赖</td></tr>
+  </table>
+
+  <h3>2.2 功能需求</h3>
+  <table>
+    <tr><th style="width:10%">编号</th><th style="width:22%">需求</th><th>说明</th><th style="width:16%">实现位置</th></tr>
+    <tr><td>F1</td><td>六域概览</td><td>以星图形式呈现六大体系，可拖拽旋转、点选进入</td><td>卷一 星穹</td></tr>
+    <tr><td>F2</td><td>谱系与图版</td><td>家族树索引、卡片墙、典籍书单</td><td>卷二 / 卷三</td></tr>
+    <tr><td>F3</td><td>AI 问答</td><td>自然语言提问，回答带典籍与圣地编号；支持多轮</td><td>Dify + 代理</td></tr>
+    <tr><td>F4</td><td>圣地旅程</td><td>天球 → 圣殿 → 等距地图 → 图志卡片，逐站行走</td><td>卷四 旅程</td></tr>
+    <tr><td>F5</td><td>图志正文</td><td>每站神话叙述 + 三条建筑形制 + 起源地推荐 + 实景</td><td>旅程图志</td></tr>
+    <tr><td>F6</td><td>降级可用</td><td>无 AI / 无网络时仍可浏览与阅读</td><td>本地词条降级</td></tr>
+    <tr><td>F7</td><td>移动端适配</td><td>500 px 起可用，触控可翻页、可拖动</td><td>全站媒体查询</td></tr>
+  </table>
+
+  <h3>2.3 非功能需求</h3>
+  <table>
+    <tr><th style="width:22%">类别</th><th>指标</th><th style="width:30%">实测</th></tr>
+    <tr><td>部署形态</td><td>静态托管可用，无数据库</td><td>Vercel 静态 + 1 个函数</td></tr>
+    <tr><td>外部依赖</td><td>0 个第三方库、0 个 CDN、0 个网络字体</td><td>0 / 0 / 0</td></tr>
+    <tr><td>体积</td><td>单文件可邮件/IM 传输</td><td>index.html 2.26 MB</td></tr>
+    <tr><td>首屏</td><td>本地打开 &lt; 2 s 可交互</td><td>约 1.2 s</td></tr>
+    <tr><td>可访问性</td><td>键盘可达、支持 prefers-reduced-motion</td><td>已实现</td></tr>
+    <tr><td>安全</td><td>密钥不下发前端；接口有限流</td><td>同源代理 + 30 次/分/IP</td></tr>
+    <tr><td>兼容性</td><td>Chrome / Edge / Safari 16.4+</td><td>CSS 3D 与 canvas 全支持</td></tr>
+  </table>
+
+  <h3>2.4 约束与由此产生的取舍</h3>
+  <table>
+    <tr><th style="width:30%">约束</th><th>取舍</th></tr>
+    <tr><td>「一个文件即全站」的传播诉求</td><td>所有图片内联为 data URI，所有脚本内联；代价是体积 2.3 MB，用照片压缩与懒装载对冲</td></tr>
+    <tr><td>不引入 3D 引擎</td><td>圣殿用 CSS 3D 程序化拼装；代价是细节止于体量与构件，收益是零依赖、源码可读</td></tr>
+    <tr><td>无自建后端</td><td>AI 能力外挂 Dify，页面只保留一个代理函数；代价是依赖第三方，收益是零运维</td></tr>
+    <tr><td>密钥不能出现在前端</td><td>取消直连模式，统一走同源代理；代价是必须有 Serverless 托管</td></tr>
+  </table>
+</section>
+
+<!-- ================= 3 系统架构 ================= -->
+<section class="page">
+  <h2><span class="no">03</span>系统架构设计</h2>
+
+  <h3>3.1 总体形态</h3>
+  <p>
+    整个系统由两部分组成：<strong>一个 2.3 MB 的 HTML 文件</strong>（含四卷界面、旅人整站、36 张内联照片）与
+    <strong>一个 Serverless 函数</strong>（Dify 代理）。前者是纯静态资源，后者只在用户提问时被调用。
+  </p>
+
+  <figure>
+    <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 z" fill="#a9803a"/>
+        </marker>
+      </defs>
+      <rect x="8" y="16" width="430" height="212" fill="#fbf9f3" stroke="#d8d3c8"/>
+      <text x="20" y="36" font-size="10" fill="#a9803a" letter-spacing="2">index.html · 2.3 MB</text>
+
+      <rect x="24" y="50" width="396" height="26" fill="#f3ead8" stroke="#d8d3c8"/>
+      <text x="34" y="68" font-size="9.5" fill="#3a3a44">顶栏：品牌 · 四卷标签 · 历史记录 · 进入询问</text>
+
+      <rect x="24" y="84" width="94" height="46" fill="#fff" stroke="#d8d3c8"/>
+      <text x="34" y="103" font-size="9" fill="#3a3a44">壹 星穹</text>
+      <text x="34" y="118" font-size="8" fill="#6b6b78">canvas + DOM</text>
+
+      <rect x="126" y="84" width="94" height="46" fill="#fff" stroke="#d8d3c8"/>
+      <text x="136" y="103" font-size="9" fill="#3a3a44">贰 谱系</text>
+      <text x="136" y="118" font-size="8" fill="#6b6b78">家族树 / 索引</text>
+
+      <rect x="228" y="84" width="94" height="46" fill="#fff" stroke="#d8d3c8"/>
+      <text x="238" y="103" font-size="9" fill="#3a3a44">叁 图版</text>
+      <text x="238" y="118" font-size="8" fill="#6b6b78">卡片墙 / 典籍</text>
+
+      <rect x="330" y="84" width="90" height="46" fill="#f3ead8" stroke="#a9803a"/>
+      <text x="340" y="103" font-size="9" fill="#3a3a44">肆 旅程</text>
+      <text x="340" y="118" font-size="8" fill="#6b6b78">iframe 装载</text>
+
+      <rect x="24" y="140" width="396" height="72" fill="#fff" stroke="#d8d3c8" stroke-dasharray="3 3"/>
+      <text x="34" y="158" font-size="8.5" fill="#6b6b78">应用内嵌应用：旅人整站以 text/template 存放，</text>
+      <text x="34" y="172" font-size="8.5" fill="#6b6b78">进卷四时还原 → 打补丁 → 写入 iframe.srcdoc</text>
+      <text x="34" y="190" font-size="8.5" fill="#6b6b78">= 天球 / 圣殿 / 地图 / 图志卡片（36 站）</text>
+
+      <rect x="470" y="52" width="240" height="86" fill="#fff" stroke="#d8d3c8"/>
+      <text x="482" y="70" font-size="9.5" fill="#3a3a44">api/chat.js（Serverless）</text>
+      <text x="482" y="88" font-size="8.5" fill="#6b6b78">· 读 DIFY_API_KEY 环境变量</text>
+      <text x="482" y="102" font-size="8.5" fill="#6b6b78">· 同 IP 30 次/分限流</text>
+      <text x="482" y="116" font-size="8.5" fill="#6b6b78">· 只透传 query / conversation_id</text>
+
+      <rect x="470" y="166" width="240" height="62" fill="#0c0a18" stroke="#241546"/>
+      <text x="482" y="186" font-size="9.5" fill="#f3d49b">Dify 知识库应用</text>
+      <text x="482" y="202" font-size="8.5" fill="#bfb2d0">检索增强生成 · 会话保持</text>
+      <text x="482" y="216" font-size="8.5" fill="#bfb2d0">返回 answer + 命中片段</text>
+
+      <path d="M440 105 L466 95" stroke="#a9803a" stroke-width="1.2" fill="none" marker-end="url(#ar)"/>
+      <path d="M590 140 L590 162" stroke="#a9803a" stroke-width="1.2" fill="none" marker-end="url(#ar)"/>
+    </svg>
+    <div class="cap">图 1　总体架构：静态站点（四卷）+ 单一代理函数 + 外部知识库应用</div>
+  </figure>
+
+  <h3>3.2 四卷状态机</h3>
+  <p>
+    四个版面均为绝对定位叠放，切换由唯一的 <code>go(i)</code> 收敛：设 <code>.is-active</code>、更新圆点、页码、翻页按钮禁用态，
+    并在 <code>i === 3</code> 时按需装载旅人。没有额外的路由层，<code>?page=N</code> 仅用于深链调试。
+  </p>
+  <pre>function go(i) {
+  i = Math.max(0, Math.min(plates.length - 1, i));
+  if (i !== 0) unlockSphere();                       // 离开星穹时把球体复位
+  plates.forEach((p, k) => p.classList.toggle('is-active', k === i));
+  dots / tabs / pgCount / prevBtn / nextBtn 同步;
+  current = i;
+  if (i === 3 &amp;&amp; !journeyPid &amp;&amp; !bootingJourney) ensureJourney(null);
+}</pre>
+
+  <h3>3.3 边界隔离：为什么卷四用 iframe</h3>
+  <p>
+    旅人（独立开发阶段的三幕应用）与图志各自都占用了 <code>$</code>、<code>.btn</code>、<code>.stage</code>、<code>body</code> 等全局名，
+    CSS 变量 <code>--ease</code>、<code>--ink</code> 也重名。硬合并需要对 4000+ 行脚本做命名空间化、对 850 行样式加前缀，风险高。
+  </p>
+  <p>
+    因此采用<strong>同源 iframe + srcdoc</strong>：旅人源码以 <code>&lt;script type="text/template"&gt;</code> 存放，进卷四时还原、按谱系打补丁、写入 iframe。
+    iframe 铺满版面区域（<code>padding:0; perspective:none</code>），视觉上就是一卷图版；同时图志顶栏保持唯一 chrome。
+  </p>
+  <div class="box">
+    <div class="t">三个必须处理的细节</div>
+    <p class="small" style="margin:0">
+      ① <strong>脚本数据转义</strong>：模块内容里的 <code>&lt;/script</code> 与 <code>&lt;!--</code> 必须转义为 <code>&lt;\/script</code>、<code>&lt;\!--</code>——
+      否则脚本数据进入 escaped / double-escaped 状态，块尾的闭合标签失效，整个文档会被吞进模板块。<br>
+      ② <strong>两套顶栏</strong>：注入 <code>.bar{display:none}</code> 隐藏旅人自带导航，避免双顶栏。<br>
+      ③ <strong>按需装载与去重</strong>：<code>journeyPid</code> 记录当前装载内容，切走再回来不重载 1.2 MB 文档。
+    </p>
+  </div>
+</section>
+
+<section class="page">
+  <h3>3.4 渲染管线</h3>
+  <table>
+    <tr><th style="width:16%">层级</th><th style="width:26%">技术</th><th>关键实现</th></tr>
+    <tr><td>星穹</td><td>Canvas 2D + DOM 混合</td><td>星野与经纬线用 <code>Path2D</code> 分批描边；星标是绝对定位的 DOM 按钮，与 canvas 共用投影函数</td></tr>
+    <tr><td>圣殿</td><td>CSS 3D（<code>preserve-3d</code>）</td><td>仅三个原语 <code>box()</code> / <code>panel()</code> / <code>face()</code>，曲面屋顶另加 <code>wedge()</code> 逐面旋转</td></tr>
+    <tr><td>地图</td><td>CSS 3D 等距投影</td><td><code>rotateX(58deg) rotateZ(-30deg)</code>；节点与人物反向旋转做 billboard；人物沿 Catmull-Rom 路径用 <code>getPointAtLength</code> 推进</td></tr>
+    <tr><td>地形</td><td>程序化 SVG</td><td>每域一套 <code>buildTerrainXX()</code>，河流 / 山脉 / 岛屿按固定随机种子生成，可复现</td></tr>
+    <tr><td>图版</td><td>手绘 SVG</td><td>36 幅节点线刻，统一 200×210 视框与描边参数</td></tr>
+  </table>
+
+  <h3>3.5 数据模型</h3>
+  <p>三十六站数据以普通对象数组内联，字段设计围绕「神话 + 建筑」双线：</p>
+  <pre>{ key:'athens', no:'01', x:-560, y:80, bw:196, bh:206,
+  name:'帕特农神庙', place:'雅典 · 卫城', en:'PARTHENON',
+  coords:'37.97°N 23.73°E', era:'前 447 – 前 432',
+  photo:'data:image/webp;base64,…', photoCap:'…', credit:'Wikimedia Commons · CC0',
+  story:'波塞冬以三叉戟击岩…',                    // 神话叙述
+  arch:['多立克围廊 8 × 17，柱高 10.4 米…', …],   // 三条建筑形制
+  site:{ n:'雅典卫城', d:'山门、帕特农、伊瑞克提翁同处一台…' } }   // 起源地推荐</pre>
+  <p class="small muted">
+    <code>x/y</code> 为等距地图坐标，<code>bw/bh</code> 为线刻版尺寸；<code>photo</code> 为内联 WebP（640 px 宽，≤20 KB）。
+    六域共用同一套坐标网格，保证路径曲线与相机取景稳定。
+  </p>
+
+  <h3>3.6 部署架构</h3>
+  <table>
+    <tr><th style="width:24%">层</th><th>内容</th><th style="width:26%">备注</th></tr>
+    <tr><td>静态层</td><td><code>index.html</code>（含全部资源）</td><td>任意静态托管均可</td></tr>
+    <tr><td>函数层</td><td><code>api/chat.js</code>（Node 18+，30 s 超时）</td><td>Vercel / Netlify Functions / Cloudflare Workers 同构</td></tr>
+    <tr><td>外部服务</td><td>Dify 知识库应用</td><td>可整站不接：不配 Key 自动降级为内置词条</td></tr>
+    <tr><td>配置</td><td><code>DIFY_API_KEY</code> / <code>DIFY_ENDPOINT</code> / <code>ALLOW_ORIGIN</code></td><td>仅存于平台环境变量</td></tr>
+  </table>
+</section>
+
+<!-- ================= 4 AI 技术方案 ================= -->
+<section class="page">
+  <h2><span class="no">04</span>AI 技术方案</h2>
+  <p class="lead">
+    本章是评审核对重点：先说明任务与选型理由，再说明集成方式，最后给出可量化的优化策略与评测方式。
+  </p>
+
+  <h3>4.1 任务定义</h3>
+  <p>
+    用户的问题高度集中在「具体遗址的具体构件」上，例如：<em>帕特农神庙为什么故意做得不直？金字塔的朝向和太阳神信仰有关吗？Newgrange 的冬至光是怎么进来的？</em>
+    这类问题的共同特征是：<strong>答案需要落在可核对的具体事实上</strong>（尺寸、方位、年代、构造做法），而不是开放式创作。
+  </p>
+  <table>
+    <tr><th style="width:18%">维度</th><th>判断</th></tr>
+    <tr><td>任务类型</td><td>闭卷事实型问答（closed-book QA → 检索增强）</td></tr>
+    <tr><td>知识来源</td><td>项目自建的 36 站图志 + 典籍与考古资料摘要（约 5 万字）</td></tr>
+    <tr><td>失败代价</td><td>高。幻觉出一个尺寸或年代，直接摧毁站点的可信度</td></tr>
+    <tr><td>交互形态</td><td>多轮对话，允许追问（「那角柱加粗是为什么？」）</td></tr>
+    <tr><td>语言</td><td>中文为主，保留原文专名（Parthenon / Hor-em-akhet）</td></tr>
+  </table>
+
+  <h3>4.2 选型理由</h3>
+  <p>候选方案有三条，逐一比较后选择 C：</p>
+  <table>
+    <tr><th style="width:22%">方案</th><th>优点</th><th>缺点</th><th style="width:12%">结论</th></tr>
+    <tr><td>A. 直接调大模型（无检索）</td><td>最快接入，代码极少</td><td>幻觉率高；无法引用自建内容；说错尺寸无从纠正</td><td>不采用</td></tr>
+    <tr><td>B. 自建 RAG（向量库 + 编排）</td><td>完全可控，可深度定制召回与重排</td><td>需向量库、嵌入模型、编排服务与运维；与「零依赖、无自建后端」的项目约束冲突</td><td>不采用</td></tr>
+    <tr><td>C. Dify 知识库应用 + 自建代理</td><td>检索、切分、提示词、会话在平台内配置；对外只暴露一个 HTTP 接口；可随时换模型</td><td>依赖第三方；需要一层代理来隔离密钥与限流</td><td><strong>采用</strong></td></tr>
+  </table>
+  <p>
+    选 C 的核心理由是<strong>把「AI 能力」当作可替换的外部服务，而不是站点的一部分</strong>。项目本身的价值在内容结构与交互形态，
+    不应把工程预算消耗在向量库运维上；同时 Dify 提供了 <code>retriever_resources</code>（命中片段元数据），
+    使「答案 → 原文出处」的回链成为可能——这是纯调用大模型做不到的。
+  </p>
+  <div class="box">
+    <div class="t">与项目约束的一致性</div>
+    <p class="small" style="margin:0">
+      零外部依赖 → AI 走服务端，前端不加载任何 SDK；<br>
+      密钥不下发 → 前端只请求同源 <code>/api/chat</code>，Key 在函数进程内读取；<br>
+      断网可用 → 未配置或请求失败时自动降级为内置词条，浏览与阅读不受影响。
+    </p>
+  </div>
+
+  <h3>4.3 知识库构建</h3>
+  <table>
+    <tr><th style="width:22%">环节</th><th>做法</th><th style="width:30%">理由</th></tr>
+    <tr><td>语料来源</td><td>36 站图志正文 + 典籍摘录 + 考古与建筑史要点</td><td>与页面内容同源，保证「问到的」与「读到的」一致</td></tr>
+    <tr><td>切分策略</td><td>按「一站一文档」，单文档 400–800 字；长条目按小标题二次切分</td><td>问答多以单点为主，过度切分会丢失上下文</td></tr>
+    <tr><td>元数据</td><td>每段带 <code>domain</code>（六域）、<code>site</code>（站名）、<code>code</code>（图版编号）</td><td>用于过滤召回与结果回链</td></tr>
+    <tr><td>专名处理</td><td>保留原文拼写并给中文对照（Hor-em-akhet / 地平线上的荷鲁斯）</td><td>用户两种写法都能命中</td></tr>
+    <tr><td>更新方式</td><td>内容改版后重跑一次索引；页面侧无需改动</td><td>知识与展示解耦</td></tr>
+  </table>
+</section>
+
+<section class="page">
+  <h3>4.4 集成方式</h3>
+  <figure>
+    <svg viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 z" fill="#a9803a"/>
+        </marker>
+      </defs>
+      <rect x="8" y="60" width="150" height="70" fill="#fff" stroke="#d8d3c8"/>
+      <text x="20" y="82" font-size="9.5" fill="#3a3a44">浏览器</text>
+      <text x="20" y="98" font-size="8.2" fill="#6b6b78">askDify(query)</text>
+      <text x="20" y="112" font-size="8.2" fill="#6b6b78">30 s AbortController</text>
+
+      <rect x="196" y="60" width="170" height="70" fill="#f3ead8" stroke="#a9803a"/>
+      <text x="208" y="82" font-size="9.5" fill="#3a3a44">/api/chat 代理</text>
+      <text x="208" y="98" font-size="8.2" fill="#6b6b78">校验 query 长度</text>
+      <text x="208" y="112" font-size="8.2" fill="#6b6b78">限流 / 注入 Bearer</text>
+
+      <rect x="404" y="60" width="150" height="70" fill="#0c0a18" stroke="#241546"/>
+      <text x="416" y="82" font-size="9.5" fill="#f3d49b">Dify</text>
+      <text x="416" y="98" font-size="8.2" fill="#bfb2d0">检索 → 组装 → 生成</text>
+      <text x="416" y="112" font-size="8.2" fill="#bfb2d0">blocking 模式</text>
+
+      <rect x="592" y="60" width="120" height="70" fill="#fff" stroke="#d8d3c8"/>
+      <text x="604" y="82" font-size="9.5" fill="#3a3a44">知识库</text>
+      <text x="604" y="98" font-size="8.2" fill="#6b6b78">36 站图志</text>
+      <text x="604" y="112" font-size="8.2" fill="#6b6b78">+ 典籍摘录</text>
+
+      <path d="M158 95 L192 95" stroke="#a9803a" stroke-width="1.2" fill="none" marker-end="url(#ar2)"/>
+      <path d="M366 95 L400 95" stroke="#a9803a" stroke-width="1.2" fill="none" marker-end="url(#ar2)"/>
+      <path d="M554 95 L588 95" stroke="#a9803a" stroke-width="1.2" fill="none" marker-end="url(#ar2)"/>
+
+      <text x="12" y="176" font-size="8.6" fill="#6b6b78">降级链：</text>
+      <text x="62" y="176" font-size="8.6" fill="#3a3a44">直连可用？ → 否 → 同源代理 → 失败 → 内置词条（本地 36 条问答）</text>
+      <text x="12" y="196" font-size="8.2" fill="#6b6b78">返回体统一为 { answer, conversation_id, sources:[{code}] }，前端不感知后端形态</text>
+    </svg>
+    <div class="cap">图 2　AI 请求链路与三级降级</div>
+  </figure>
+
+  <h4>请求契约</h4>
+  <pre>// 前端 → 代理
+POST /api/chat
+{ "query": "帕特农神庙为什么故意做得不直？", "conversation_id": "", "user": "mythos-web" }
+
+// 代理 → Dify
+{ "inputs": {}, "query": "…", "response_mode": "blocking",
+  "conversation_id": "", "user": "mythos-web" }
+
+// 代理 → 前端（归一化后）
+{ "answer": "…", "conversation_id": "3f2a…", "sources": [{ "code": "GR-01" }] }</pre>
+
+  <h4>多轮与上下文</h4>
+  <p>
+    <code>conversation_id</code> 由 Dify 首次返回、前端保存并在后续请求回传，从而支持「那角柱加粗是为什么」这类省略主语的追问。
+    <code>user</code> 固定为 <code>mythos-web</code>，不使用个人标识——既不采集隐私，也便于在 Dify 侧按应用维度看调用量。
+  </p>
+
+  <h3>4.5 提示词与输出约束</h3>
+  <table>
+    <tr><th style="width:24%">约束</th><th>目的</th></tr>
+    <tr><td>只依据检索片段回答</td><td>抑制幻觉；片段里没有的就明说「本志未收」</td></tr>
+    <tr><td>结构化输出：结论 + 依据 + 出处编号</td><td>让用户能回到图版核对</td></tr>
+    <tr><td>数值必须带单位与量级</td><td>「69.5 × 30.9 米」而不是「大约七十米」</td></tr>
+    <tr><td>禁止编造未收录的遗址</td><td>站点只对 36 处负责，避免答成旅游百科</td></tr>
+    <tr><td>答案长度 ≤ 300 字</td><td>适配抽屉式阅读面板，避免长文把界面撑爆</td></tr>
+  </table>
+
+  <h3>4.6 优化策略</h3>
+  <table>
+    <tr><th style="width:22%">策略</th><th>具体做法</th><th style="width:28%">效果</th></tr>
+    <tr><td>检索范围收敛</td><td>按 <code>domain</code> 元数据先过滤再召回</td><td>避免「中国的问题答成希腊的柱式」</td></tr>
+    <tr><td>查询改写</td><td>把口语化提问补全专名（「那个圆土丘」→ Newgrange）</td><td>提升召回率，减少「不知道你指哪」</td></tr>
+    <tr><td>结果归一化</td><td>代理层把 <code>retriever_resources</code> 解析为图版编号</td><td>前端可直接渲染「出处 GR-01」并可点击</td></tr>
+    <tr><td>超时与中断</td><td>前端 30 s <code>AbortController</code>；给用户明确的等待态</td><td>杜绝无限转圈</td></tr>
+    <tr><td>降级链</td><td>直连 → 代理 → 本地词条</td><td>任何环节故障都不白屏</td></tr>
+    <tr><td>限流</td><td>同 IP 30 次/分，超限返回 429</td><td>防止密钥被刷、控制调用成本</td></tr>
+    <tr><td>体积与首屏解耦</td><td>AI 不参与首屏；函数冷启动不影响浏览</td><td>弱网下先读到内容，再答问题</td></tr>
+  </table>
+
+  <h3>4.7 评测方式</h3>
+  <p>
+    自建 40 题的小型评测集，覆盖六个域、四类问法（尺寸 / 方位 / 构造 / 源流），逐题人工核对三点：
+    <strong>事实是否正确</strong>（对照正文）、<strong>是否给出出处</strong>、<strong>是否仅依据检索片段</strong>。
+  </p>
+  <table>
+    <tr><th style="width:26%">指标</th><th>定义</th><th style="width:18%">目标</th></tr>
+    <tr><td>事实准确率</td><td>关键数值/结论与正文一致</td><td>≥ 95%</td></tr>
+    <tr><td>出处覆盖率</td><td>答案带可回链的图版编号</td><td>≥ 90%</td></tr>
+    <tr><td>拒答正确率</td><td>未收录问题明确说明未收录</td><td>≥ 90%</td></tr>
+    <tr><td>P95 响应</td><td>从提交到首字返回</td><td>&lt; 8 s</td></tr>
+  </table>
+  <p class="small muted">评测在部署环境执行，结果随版本记录；改动知识库或提示词后需重跑。</p>
+
+  <h3>4.8 安全与合规</h3>
+  <ul class="small">
+    <li><strong>密钥</strong>：只存平台环境变量；源码经自检脚本扫描，确认无 <code>app-</code> 开头的密钥串。</li>
+    <li><strong>输入</strong>：代理层对 <code>query</code> 截断至 2000 字符，不落库、不记日志正文。</li>
+    <li><strong>输出</strong>：只透传 <code>answer</code> 与出处编号，不返回原始检索片段，避免二次泄漏。</li>
+    <li><strong>来源</strong>：可用 <code>ALLOW_ORIGIN</code> 收窄到自有域名，阻断第三方盗用代理。</li>
+  </ul>
+</section>
+
+<!-- ================= 5 核心功能实现 ================= -->
+<section class="page">
+  <h2><span class="no">05</span>核心功能实现</h2>
+
+  <h3>5.1 星穹：canvas 与 DOM 的混合</h3>
+  <p>
+    星野、经纬线与大气光晕由 canvas 绘制；星标不是画上去的，而是绝对定位的 DOM 按钮——可聚焦、可键盘操作、可挂提示，点击热区也好控。
+    两者共用同一个 <code>project(lat, lon)</code> 投影函数，保证「球转星标跟」。
+  </p>
+  <p>
+    锁定某个谱系时给球体容器施加 <code>rotateY</code> 位移与缩放，镜头转向该节点；标签做矩形相交检测防重叠，按 z 轴深度排序后再放置，
+    解决早期移动端的抖动。
+  </p>
+
+  <h3>5.2 圣殿：三个原语拼出六座建筑</h3>
+  <p>
+    不引入 3D 引擎，只抽象出三个原语，所有建筑都由它们拼装：
+  </p>
+  <pre>box(w, h, d, x, y, z, {front, sideR, sideL, top})   // 长方体，y 是底边
+panel(w, h, x, yBottom, z, rotY, cls, extra)        // 单片面板
+face(w, h, transform, cls)                          // 单个面
+wedge(rotY, wBot, {inner, outer, topW}, yTop, yBot)  // 斜屋面：竖直面板 + rotateX 贴合</pre>
+  <table>
+    <tr><th style="width:18%">圣殿</th><th>实现要点</th></tr>
+    <tr><td>帕特农</td><td>三级台基 + 46 根柱（柱身凹槽用 <code>repeating-linear-gradient</code>）+ 额枋 + 山花三角</td></tr>
+    <tr><td>大金字塔</td><td>四个裁角三角面围成锥体，表面叠石材层理渐变</td></tr>
+    <tr><td>天贶殿</td><td>重檐歇山：内缘贴墙的裙檐环 + 顶部歇山，两者共用 <code>wedge()</code></td></tr>
+    <tr><td>伊势神宫</td><td>掘立柱高床 + 萱葺切妻 + 千木鲣木 + 玉垣</td></tr>
+    <tr><td>纽格莱奇</td><td><code>ring()</code> 生成 20 段环形坡面堆成穹丘 + 缘石圈 + 白色石英立面</td></tr>
+    <tr><td>巨石阵</td><td>30 根砂岩柱 + 30 根横楣 + 20 根青石 + 5 座三石塔 + 土堤壕沟</td></tr>
+  </table>
+  <div class="box">
+    <div class="t">关键坑：CSS 权重</div>
+    <p class="small" style="margin:0">
+      基础规则 <code>.b&gt;i{background:#c9bea9}</code> 的特异性为 (0,1,1)，会覆盖材质类 <code>.f-xxx</code> (0,1,0)，
+      导致整栋建筑变成一片米色。所有材质类必须写成 <code>.b .f-xxx</code>（(0,2,0)）才生效。此坑排查耗时最长，已写入文档与注释。
+    </p>
+  </div>
+
+  <h3>5.3 地图：等距投影与行走</h3>
+  <ul>
+    <li>世界容器施加 <code>rotateX(58deg) rotateZ(-30deg)</code> 形成等距视角；节点与人物反向旋转做 billboard，避免被压扁。</li>
+    <li>路径由 36 站坐标经 Catmull-Rom 平滑成曲线（<code>catmullD</code>），人物用 <code>getPointAtLength</code> 沿路径推进。</li>
+    <li>相机对位必须计入透视：<code>w = 1 - z/1400</code>，<code>cam.ty = oyL + (offY - oyL) * w</code>；按纯 2D 线性计算会偏 200 像素以上。</li>
+    <li>地形（河流、山脉、岛屿、长城）由固定随机种子的程序化 SVG 生成，可复现、可微调。</li>
+  </ul>
+
+  <h3>5.4 图志：把神话落到构件上</h3>
+  <p>
+    每站卡片包含四段：<strong>神话叙述</strong>（约 150 字，讲清神的行动与人的处境）、<strong>三条建筑形制</strong>（具体到数字与做法）、
+    <strong>起源地推荐</strong>（站到那里该看什么）、<strong>实景照片</strong>（带图注与许可）。正文刻意保留可核对的数字：
+    「柱高 10.4 米、台基 69.5 × 30.9 米」「Ménec 石列长 1167 米、11 行、1099 块」。
+  </p>
+
+  <h3>5.5 卷四装载器</h3>
+  <pre>function buildJourneySrc(pid) {
+  let src = tpl.textContent.split('&lt;\\/script').join('&lt;/script');   // 还原转义
+  src = src.split('&lt;\\!--').join('&lt;!--');
+  if (pid) {                                        // 只有指定卷才跳过天球
+    src = src.split('let CH = CHAPTERS.gr;').join('let CH = CHAPTERS.' + pid + ';');
+    src = src.split("if (!h || h === '#') return;").join("enterChapter('" + pid + "');");
+  }
+  return src.split('&lt;/head>').join('&lt;style>.bar{display:none!important}&lt;/style>&lt;/head>');
+}</pre>
+  <p class="small">
+    顶栏进卷四 → <code>pid = null</code>，不注入深链补丁（停在旅人天球）；谱系面板进 → 注入 <code>enterChapter</code>，直达该卷圣殿。
+  </p>
+
+  <h3>5.6 体积工程</h3>
+  <table>
+    <tr><th style="width:24%">手段</th><th>做法</th><th style="width:22%">结果</th></tr>
+    <tr><td>照片重编码</td><td>统一 640 px 宽，质量二分搜索逼近 17 KB，个别图再降一档分辨率</td><td>36 张共约 700 KB，平均 20.5 KB</td></tr>
+    <tr><td>换行裁剪</td><td>3:2 等比裁切 + 轻度锐化，卡片显示约 380 px，无可见损失</td><td>—</td></tr>
+    <tr><td>避免 base64 膨胀</td><td>模板块采用转义而非 base64 存放，省去 33% 体积</td><td>1.63 MB → 1.22 MB</td></tr>
+    <tr><td>按需装载</td><td>旅人只在进卷四时写入 iframe，且按谱系去重</td><td>首屏不解析 1.2 MB 文档</td></tr>
+  </table>
+</section>
+
+<!-- ================= 6 测试与部署 ================= -->
+<section class="page">
+  <h2><span class="no">06</span>测试与部署</h2>
+
+  <h3>6.1 测试策略</h3>
+  <p>项目没有测试框架，采用四类可复现的轻量验证，全部可脚本化：</p>
+  <table>
+    <tr><th style="width:22%">类型</th><th>方法</th><th style="width:30%">覆盖</th></tr>
+    <tr><td>静态自检</td><td><code>npm run check</code>：语法解析、密钥扫描、外链计数、结构完整性</td><td>每次提交前</td></tr>
+    <tr><td>视觉回归</td><td>无头浏览器截图，统一降采样为 JPEG 后人工比对</td><td>四卷关键状态、移动端 500 px</td></tr>
+    <tr><td>状态探针</td><td>注入脚本读取 DOM 状态写入 <code>document.title</code>，再用 <code>--dump-dom</code> 取回</td><td>卷四装载、章节切换、降级链</td></tr>
+    <tr><td>降级演练</td><td>清空 Key、断网、<code>file://</code> 打开三种条件</td><td>AI 不可用时的浏览连续性</td></tr>
+  </table>
+
+  <h3>6.2 关键用例与结果</h3>
+  <table>
+    <tr><th style="width:8%">编号</th><th style="width:34%">用例</th><th style="width:32%">预期</th><th>结果</th></tr>
+    <tr><td>T1</td><td>顶栏点「肆 旅程」</td><td>进入天球，首次显示六域星标</td><td>通过（<code>stage=stageGlobe</code>）</td></tr>
+    <tr><td>T2</td><td>谱系面板点「进入这一卷的旅程」</td><td>直达该卷圣殿，正殿文案正确</td><td>通过（<code>body=ch-eg</code>，文案「胡夫金字塔」）</td></tr>
+    <tr><td>T3</td><td>地图点建筑 → 图志卡片</td><td>照片、图注、正文齐全</td><td>通过（三域抽检）</td></tr>
+    <tr><td>T4</td><td>清空 Key 后提问</td><td>自动降级为内置词条，不白屏</td><td>通过</td></tr>
+    <tr><td>T5</td><td>配置 Key 后提问</td><td>回答来自知识库，带出处编号</td><td>通过（代理 200）</td></tr>
+    <tr><td>T6</td><td>500 px 窄屏</td><td>四卷可用，节点与按钮不重叠</td><td>通过</td></tr>
+    <tr><td>T7</td><td>源码密钥扫描</td><td>无 <code>app-</code> 密钥串</td><td>通过</td></tr>
+    <tr><td>T8</td><td>断网打开 index.html</td><td>全部内容可读</td><td>通过</td></tr>
+  </table>
+
+  <h3>6.3 部署流程</h3>
+  <ol>
+    <li>安装 Node.js ≥ 18，克隆仓库；</li>
+    <li><code>npx vercel login</code> → <code>npx vercel --prod</code>；</li>
+    <li>平台 Settings → Environment Variables 添加 <code>DIFY_API_KEY</code>（可选 <code>DIFY_ENDPOINT</code>、<code>ALLOW_ORIGIN</code>）；</li>
+    <li>Redeploy 使环境变量生效；</li>
+    <li>验收：线上提问返回 200，响应体不含任何密钥；断网或未配 Key 时页面仍完整可读。</li>
+  </ol>
+
+  <h3>6.4 运维与排错</h3>
+  <table>
+    <tr><th style="width:34%">现象</th><th>定位</th><th>处理</th></tr>
+    <tr><td>500「DIFY_API_KEY 未配置」</td><td>函数环境变量缺失</td><td>补齐后 Redeploy</td></tr>
+    <tr><td>404 <code>/api/chat</code></td><td>托管方不支持函数</td><td>换 Vercel / Netlify Functions</td></tr>
+    <tr><td>提问一直走词条</td><td><code>file://</code> 打开，或代理报错降级</td><td>用 http(s) 打开；看 Network 中 <code>chat</code> 响应</td></tr>
+    <tr><td>401</td><td>Key 失效</td><td>重新签发并更新环境变量</td></tr>
+    <tr><td>卷四空白</td><td>iframe 被扩展拦截</td><td>换浏览器或关闭拦截</td></tr>
+  </table>
+</section>
+
+<!-- ================= 7 创新点 ================= -->
+<section class="page">
+  <h2><span class="no">07</span>创新点说明</h2>
+
+  <h3>7.1 技术创新</h3>
+
+  <h4>（1）零依赖的「单文件全站」架构</h4>
+  <p>
+    把四卷界面、六域 36 站、36 张真实照片、六座 3D 建筑、六套地形全部压进一个 HTML 文件，运行时不产生任何外部请求。
+    这在传播与评审场景下非常关键：一个文件即可完整演示，无需部署、无需安装、无需网络。
+    为实现这一点，项目自建了两套配套机制——照片的内联压缩流水线（640 px / ≤20 KB / 质量二分搜索）与模板块的转义装载器。
+  </p>
+
+  <h4>（2）CSS 3D 的参数化建筑生成器</h4>
+  <p>
+    六座圣殿并非贴图或模型文件，而是由三个原语（<code>box</code> / <code>panel</code> / <code>face</code>）加一个斜屋面算子 <code>wedge</code> 现场拼装：
+    帕特农的围廊、天贶殿的重檐、伊势的千木、纽格莱奇的穹丘、巨石阵的柱列，全部可由参数描述并在源码中直接读到。
+    这带来两个好处：<strong>体积为零</strong>（无模型文件），<strong>可读性极高</strong>（评委可直接读懂一座建筑是怎么被「搭」出来的）。
+  </p>
+
+  <h4>（3）应用内嵌应用的边界方案</h4>
+  <p>
+    两套各自成熟的前端应用要在同一页面共存，常规做法是重写命名空间或引入微前端框架。项目给出第三条路：
+    <strong>模板块存放 + 运行时还原 + srcdoc 隔离</strong>，并用「转义 <code>&lt;/script</code> 与 <code>&lt;!--</code>」解决脚本数据状态的解析陷阱。
+    结果是零冲突、零依赖，且能用 <code>enterChapter(pid)</code> 精确控制内嵌应用的初始状态。
+  </p>
+
+  <h4>（4）等距地图的相机与行走</h4>
+  <p>
+    在纯 CSS 3D 下实现「人物沿路径行走 + 相机跟随」，难点在于透视对位：必须把 <code>w = 1 - z/1400</code> 代入屏幕坐标换算，
+    否则镜头会偏出 200 像素以上。项目把这一推导固化为公式并写入注释，使后续新增域时无需重新调参。
+  </p>
+
+  <h4>（5）密钥零暴露与三级降级</h4>
+  <p>
+    前端不保存任何密钥，只请求同源代理；代理带限流与来源白名单。同时设计「直连 → 代理 → 本地词条」三级降级，
+    保证 AI 链路任何一环失效时，站点依然是完整的读物而非错误页。
+  </p>
+
+  <h3>7.2 应用创新</h3>
+
+  <h4>（1）「神话—圣地—建筑形制」三段式解说</h4>
+  <p>
+    通行资料里神话与建筑史是两条线。本项目把每一条神话节点都落到具体构件上：波塞冬与雅典娜之争 → 帕特农的多立克围廊与视差矫正；
+    大国主让国 → 出云大社的心御柱与 5.2 米注连绳；达格达的居所 → 纽格莱奇的屋顶箱与冬至光。
+    读者不是「知道了一个故事」，而是知道<strong>下次站在那栋建筑前该抬头看哪里</strong>。
+  </p>
+
+  <h4>（2）问答与图版的闭环</h4>
+  <p>
+    AI 答案通过 <code>retriever_resources</code> 回链到图版编号（如 GR-01），用户可以从一句回答直接跳到那一站的实景与形制说明。
+    「问 → 读 → 走」形成闭环，AI 不是外挂的聊天框，而是索引器。
+  </p>
+
+  <h4>（3）跨文明的横向对照</h4>
+  <p>
+    六域共用同一套数据模型与坐标网格，使「同一母题的不同处理」可以被直接比较：
+    墓葬（金字塔 / 通道墓 / 王陵 / 古坟）、门（塔门 / 鸟居 / 山门 / 石圈入口）、柱（多立克 / 纸莎草 / 朱漆 / 立石）。
+    这种对照在单文明读物里几乎不会出现。
+  </p>
+
+  <h4>（4）为评审与传播而设计的交付形态</h4>
+  <p>
+    一个 2.3 MB 的文件可以走邮件、U 盘、IM；学校机房、无网会议室都能直接打开演示。
+    对参赛作品而言，「能被打开」本身就是一项被低估的创新。
+  </p>
+
+  <h3>7.3 与同类项目的差异</h3>
+  <table>
+    <tr><th style="width:22%">维度</th><th>常见做法</th><th>本项目</th></tr>
+    <tr><td>内容组织</td><td>按文明分栏的图文百科</td><td>神话 → 圣地 → 建筑形制的三段链</td></tr>
+    <tr><td>AI 定位</td><td>独立聊天模块</td><td>索引器：答案回链到具体图版</td></tr>
+    <tr><td>3D 呈现</td><td>引入 three.js + 模型文件</td><td>CSS 3D 参数化生成，零依赖可读</td></tr>
+    <tr><td>交付形态</td><td>需部署的 Web 应用</td><td>单文件 + 一个可选函数</td></tr>
+    <tr><td>离线能力</td><td>依赖网络</td><td>断网可读，AI 缺失自动降级</td></tr>
+  </table>
+</section>
+
+<!-- ================= 8 总结与展望 ================= -->
+<section class="page">
+  <h2><span class="no">08</span>总结与展望</h2>
+
+  <h3>8.1 完成情况</h3>
+  <p>
+    项目完成了一个可交付、可演示、可传播的世界神话史站点：六域 36 站、四卷交互、六座程序化圣殿、36 张真实实景，
+    并接入检索增强问答。全部代码与素材在一个仓库内，含完整提交历史、架构文档、素材授权清单与自检脚本。
+  </p>
+  <table>
+    <tr><th style="width:34%">指标</th><th>数值</th></tr>
+    <tr><td>神话体系 / 站点</td><td>6 / 36</td></tr>
+    <tr><td>程序化 3D 圣殿</td><td>6 座</td></tr>
+    <tr><td>实景照片</td><td>36 张（CC0 / CC BY / CC BY-SA / PD）</td></tr>
+    <tr><td>单文件体积</td><td>2.26 MB（零外部请求）</td></tr>
+    <tr><td>运行时依赖</td><td>0</td></tr>
+    <tr><td>自动化自检</td><td>4 类 8 项，全部通过</td></tr>
+  </table>
+
+  <h3>8.2 局限</h3>
+  <ul>
+    <li><strong>体积</strong>：2.3 MB 对移动网络仍是负担，首屏需要解析整份文档。</li>
+    <li><strong>模型细节</strong>：CSS 3D 停留在体量与主要构件层面，石材肌理、雕饰、内部空间无法表达。</li>
+    <li><strong>知识边界</strong>：问答只对 36 站负责，超出范围会明示未收录——这是有意的克制，但对部分用户可能显得「不够聪明」。</li>
+    <li><strong>内容维护</strong>：目前靠人工撰写与核对，尚未建立更系统的资料引用体系。</li>
+  </ul>
+
+  <h3>8.3 后续路线</h3>
+  <table>
+    <tr><th style="width:26%">方向</th><th>做法</th><th style="width:20%">预期</th></tr>
+    <tr><td>首屏瘦身</td><td>旅人拆为 <code>journey.html</code>，卷四懒加载</td><td>首屏 2.3 → 1.1 MB</td></tr>
+    <tr><td>内容扩展</td><td>新增域（美索不达米亚、北欧、玛雅）与站点</td><td>每域 6 站，沿用同一数据模型</td></tr>
+    <tr><td>呈现升级</td><td>关键圣殿引入 glTF 低模（量化后 ≤100 KB）</td><td>在保持零依赖前提下提升细节</td></tr>
+    <tr><td>知识增强</td><td>为每条形制说明补引用（典籍版本 / 考古报告页码）</td><td>可核对性再进一步</td></tr>
+    <tr><td>多语言</td><td>中文 / 英文双语正文与图注</td><td>面向国际评审与读者</td></tr>
+    <tr><td>离线增强</td><td>Service Worker 缓存与「安装到桌面」</td><td>弱网可用性提升</td></tr>
+  </table>
+
+  <h3>8.4 结语</h3>
+  <p class="lead">
+    这个项目试图回答一个小问题：当一个人终于站在那些石头面前，能不能提前知道该抬头看哪里。
+    技术上它没有用最时髦的方案，而是把「零依赖、可读、可传播」当作硬约束，用 CSS 3D、canvas 与一个代理函数把答案做了出来。
+    如果它能让某个人在帕特农的柱廊前多站三分钟，这个项目就成立了。
+  </p>
+</section>
+
+<!-- ================= 附录 ================= -->
+<section>
+  <h2><span class="no">APPENDIX</span>附录</h2>
+
+  <h3>A. 关键参数速查</h3>
+  <table>
+    <tr><th style="width:30%">参数</th><th>取值</th></tr>
+    <tr><td>单文件体积</td><td>2.26 MB（内联照片约 700 KB，旅人模块约 1.2 MB）</td></tr>
+    <tr><td>照片规格</td><td>640 px 宽、3:2 裁切、WebP、单张 ≤20 KB</td></tr>
+    <tr><td>地图投影</td><td><code>rotateX(58deg) rotateZ(-30deg)</code></td></tr>
+    <tr><td>相机透视补偿</td><td><code>w = 1 - z/1400</code></td></tr>
+    <tr><td>AI 超时</td><td>30 s（前端 <code>AbortController</code>）</td></tr>
+    <tr><td>代理限流</td><td>30 次/分钟/IP</td></tr>
+    <tr><td>输入截断</td><td>2000 字符</td></tr>
+  </table>
+
+  <h3>B. 仓库结构</h3>
+  <pre>Mythographia/
+├── index.html              网站本体（四卷 + 内嵌旅人）
+├── myth-traveler.html      旅人独立版
+├── api/chat.js             Dify 代理（Node 18+）
+├── vercel.json             部署配置
+├── package.json            脚本与引擎声明（0 依赖）
+├── .env.example            环境变量模板
+├── tools/check.js          提交前自检
+├── docs/ASSETS.md          36 张图片的来源与许可
+├── ARCHITECTURE.md         架构与实现细节
+├── README.md               项目说明
+└── LICENSE                 MIT</pre>
+
+  <h3>C. 术语</h3>
+  <table>
+    <tr><th style="width:26%">术语</th><th>含义</th></tr>
+    <tr><td>卷四 / 旅程</td><td>内嵌的三幕式圣地旅程（天球 → 圣殿 → 地图 → 图志）</td></tr>
+    <tr><td>圣殿</td><td>每域一座程序化 CSS 3D 主建筑，作为该卷的视觉锚点</td></tr>
+    <tr><td>图志</td><td>每站的卡片：神话叙述 + 建筑形制 + 起源地推荐 + 实景</td></tr>
+    <tr><td>楔面 wedge</td><td>斜屋面的最小单元：一片竖直面板绕 X 轴旋转贴合坡面</td></tr>
+    <tr><td>降级链</td><td>直连 → 同源代理 → 本地词条 的三级容错</td></tr>
+  </table>
+</section>
+
+</body>
+</html>

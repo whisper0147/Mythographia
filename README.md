@@ -85,6 +85,8 @@ Mythographia/
 ├── vercel.json             部署配置
 ├── package.json            脚本与引擎声明（无第三方依赖）
 ├── .env.example            环境变量模板
+├── 技术文档-世界神话史星穹图志.pdf   技术文档（24 页，PDF）
+├── docs/technical-doc.html 技术文档源文件（可重新导出）
 ├── ARCHITECTURE.md         架构与实现细节
 ├── docs/ASSETS.md          36 张图片的来源与授权清单
 ├── LICENSE                 MIT
@@ -229,5 +231,6 @@ npm run check                                # 见 package.json，Windows 可用
 2. `神话旅人` 六域 36 站、六座程序化 3D 圣殿
 3. 两者融合：卷四旅程 + Dify 代理
 4. 提交材料：架构文档、环境变量模板、素材授权清单
+5. 技术文档：24 页 PDF（项目概述 / 需求分析 / 架构 / AI 方案 / 实现 / 测试部署 / 创新点）
 
 提交信息遵循 Conventional Commits（`feat:` / `docs:` / `fix:` / `chore:`）。
