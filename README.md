@@ -85,7 +85,8 @@ Mythographia/
 ├── vercel.json             部署配置
 ├── package.json            脚本与引擎声明（无第三方依赖）
 ├── .env.example            环境变量模板
-├── 技术文档-世界神话史星穹图志.pdf   技术文档（24 页，PDF）
+├── 技术文档.docx          技术文档 Word 版（可编辑）
+├── 技术文档-世界神话史星穹图志.pdf   技术文档 PDF（24 页，提交用）
 ├── docs/technical-doc.html 技术文档源文件（可重新导出）
 ├── ARCHITECTURE.md         架构与实现细节
 ├── docs/ASSETS.md          36 张图片的来源与授权清单
