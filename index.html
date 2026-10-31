@@ -5991,8 +5991,11 @@ function prevAction() {
 
 /* 交互绑定 */
 nodesEl.addEventListener('click', e => {
-  if (Date.now() - justTapped < 360) return;
-  const b = e.target.closest('.node') || nodeHitTarget(e.clientX, e.clientY);
+  /* 指针点按已经由 mapUp 处理过；浏览器随后合成的 click（detail >= 1）
+     可能落在相邻节点上，会 walkTo 把刚打开的图志关掉，所以这里一律忽略。
+     键盘激活（Enter / Space）的 click 其 detail 为 0，仍走下面。 */
+  if (e.detail > 0) return;
+  const b = e.target.closest('.node');
   if (!b) return;
   const i = +b.dataset.i;
   if (i === state.at && !state.walking) openCodex(i);
@@ -6022,7 +6025,7 @@ function enterMap() {
   setActor(0);
   updateTrail();
   progress();
-  cam.tz = innerWidth <= 760 ? clamp(innerWidth / 900, .52, .9) : clamp(innerWidth / 1900, .62, .94);
+  cam.tz = innerWidth <= 760 ? clamp(innerWidth / 780, .62, .98) : clamp(innerWidth / 1900, .62, .94);
   cam.panX = 0; cam.panY = 0;
   camGoal();
   cam.z = cam.tz * .6;
@@ -6147,7 +6150,7 @@ function onResize() {
   sizeGlobe();
   if (state.stage === 1) computeSiteScale();
   if (mapBuilt) {
-    cam.tz = innerWidth <= 760 ? clamp(innerWidth / 900, .52, .9) : clamp(innerWidth / 1900, .62, .94);
+    cam.tz = innerWidth <= 760 ? clamp(innerWidth / 780, .62, .98) : clamp(innerWidth / 1900, .62, .94);
     camGoal(); paintCam();
   }
 }
