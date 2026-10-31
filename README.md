@@ -167,6 +167,8 @@ npx vercel --prod
 ```
 
 然后在 Vercel 项目 **Settings → Environment Variables** 添加 `DIFY_API_KEY`，再 **Redeploy**。
+
+国内网络打不开 `vercel.app` 时，改用腾讯云 CloudBase 部署，步骤见 [`docs/DEPLOY-CN.md`](docs/DEPLOY-CN.md)。
 详细步骤、故障排查表见文末「八、常见问题」。
 
 ---
