@@ -5988,8 +5988,8 @@ function prevAction() {
 
 /* 交互绑定 */
 nodesEl.addEventListener('click', e => {
-  if (Date.now() - justTapped < 500) return;
-  const b = e.target.closest('.node');
+  if (Date.now() - justTapped < 360) return;
+  const b = e.target.closest('.node') || nodeHitTarget(e.clientX, e.clientY);
   if (!b) return;
   const i = +b.dataset.i;
   if (i === state.at && !state.walking) openCodex(i);
@@ -6046,12 +6046,15 @@ function resetMap() {
 let mapDrag = null, justTapped = 0;
 mapView.addEventListener('pointerdown', e => {
   if (e.target.closest('.map-hud')) return;
-  mapDrag = { x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, moved: false, id: e.pointerId };
+  mapDrag = { x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, moved: false,
+              id: e.pointerId, type: e.pointerType || 'mouse' };
 });
 mapView.addEventListener('pointermove', e => {
   if (!mapDrag) return;
   if (!mapDrag.moved) {
-    if (Math.abs(e.clientX - mapDrag.sx) + Math.abs(e.clientY - mapDrag.sy) < 6) return;
+    /* 手指抖动常有 5–12px，鼠标 6px 足够；触摸放宽到 14px，否则轻点会被当成拖拽 */
+    const slop = (mapDrag.type === 'touch' || mapDrag.type === 'pen') ? 14 : 6;
+    if (Math.abs(e.clientX - mapDrag.sx) + Math.abs(e.clientY - mapDrag.sy) < slop) return;
     mapDrag.moved = true;
     try { mapView.setPointerCapture(e.pointerId); } catch (_) { }
     mapView.style.cursor = 'grabbing';
@@ -6063,6 +6066,25 @@ mapView.addEventListener('pointermove', e => {
   cam.x = cam.tx; cam.y = cam.ty;
   paintCam();
 });
+/* 命中判定：先按坐标点栈找，再按屏幕距离兜底（手机上门牌很小，点偏是常态） */
+function nodeHitTarget(x, y) {
+  const stack = document.elementsFromPoint(x, y) || [];
+  for (let k = 0; k < stack.length; k++) {
+    const el = stack[k];
+    if (el.closest && el.closest('.node')) return el.closest('.node');
+  }
+  let best = null, bestD = 1e9;
+  nodesEl.querySelectorAll('.node').forEach(function (b) {
+    const r = b.getBoundingClientRect();
+    if (!r.width || r.height < 2) return;
+    const dx = Math.max(r.left - x, 0, x - r.right);
+    const dy = Math.max(r.top - y, 0, y - r.bottom);
+    const d = Math.hypot(dx, dy);
+    if (d < bestD) { bestD = d; best = b; }
+  });
+  return bestD <= 28 ? best : null;
+}
+
 const mapUp = e => {
   if (!mapDrag) return;
   const wasDrag = mapDrag.moved;
@@ -6070,8 +6092,7 @@ const mapUp = e => {
   mapView.style.cursor = '';
   if (wasDrag) { try { mapView.releasePointerCapture(e.pointerId); } catch (_) { } return; }
   /* 兜底命中测试：万一浏览器把 click 吞了，这里也能把门点开 */
-  const hit = document.elementFromPoint(e.clientX, e.clientY);
-  const btn = hit && hit.closest ? hit.closest('.node') : null;
+  const btn = nodeHitTarget(e.clientX, e.clientY);
   if (!btn) return;
   justTapped = Date.now();
   const i = +btn.dataset.i;
