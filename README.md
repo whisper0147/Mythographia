@@ -3,6 +3,14 @@
 
 > 一个可以「问」、也可以「走」的世界神话史：六个神话体系，从星穹点进去，落到具体的石头上。
 
+## 在线演示
+
+| 入口 | 地址 | 说明 |
+|---|---|---|
+| 国内 | <https://mythographia-rolling-weasel-d8geixrjl5ec11027.webapps.tcloudbase.com> | 腾讯云静态托管 + SCF 云函数代理，国内访问稳定 |
+| 海外 | <https://mythographia-yaogu.vercel.app> | Vercel 部署，部分国内网络可能打不开 |
+| 离线 | `Mythographia-离线演示.zip` | 解压双击 `index.html`，四卷完整（AI 退回内置词条） |
+
 ---
 
 ## 一、项目介绍
