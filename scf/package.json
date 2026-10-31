@@ -1,0 +1,10 @@
+{
+  "name": "mythographia-scf-chat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "世界神话史 · 星穹图志 —— SCF 事件函数版 Dify 代理",
+  "main": "index.js",
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "dependencies": {}
+}
