@@ -28,10 +28,13 @@
   --iso-z:-30deg;
 }
 *,*::before,*::after{box-sizing:border-box}
-html,body{height:100%;margin:0}
+/* 手机端把文档钉死：地址栏收放、iOS 的回弹都不许把整卷滚出去
+   （一旦文档被滚走，图志卡片和地图会一起滑出视口，看起来就是"内容消失"） */
+html{overflow:hidden;overscroll-behavior:none}
+html,body{height:100%;margin:0;position:fixed;inset:0;width:100%}
 body{
   font-family:var(--sans);color:var(--ink);background:var(--void);
-  overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow:hidden;overscroll-behavior:none;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
   -webkit-user-select:none;user-select:none;
   -webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;
 }
@@ -585,6 +588,10 @@ figure{margin:0}
     top:auto;left:0;right:0;bottom:0;width:100%;height:auto;max-height:72vh;
     border-left:0;border-top:1px solid rgba(217,169,78,.2);border-radius:8px 8px 0 0;
     transform:translateY(104%);
+    /* 手机上去掉毛玻璃：卡片本来就接近不透明，而在整屏横滑动画里做 backdrop-filter
+       是安卓/鸿蒙上最常见的"闪一下""半张卡片发白"来源 */
+    backdrop-filter:none;-webkit-backdrop-filter:none;
+    background:linear-gradient(180deg,rgba(15,10,32,.995),rgba(8,5,18,.99));
   }
   .codex.is-open{transform:none}
   .codex-scroll{padding:46px 18px 18px}
@@ -3645,6 +3652,9 @@ function openCodex(i) {
   codex.classList.add('is-open');
   codex.setAttribute('aria-hidden', 'false');
   codexBody.scrollTop = 0;
+  /* 提示条别压在卡片正文上（手机端两者都在视口下半屏） */
+  const tip = $('#toast');
+  if (tip) tip.classList.remove('is-on');
   if (pathEl) camGoal();
 }
 function closeCodex() {
@@ -3768,9 +3778,16 @@ function prevAction() {
 
 /* 交互绑定 */
 nodesEl.addEventListener('click', e => {
-  if (Date.now() - justTapped < 500) return;
+  /* 这一层只负责"键盘激活"。指针的点按已经由 mapUp 处理过，
+     紧随其后浏览器合成的 click 若再走一遍，就会落到相邻的城上，
+     walkTo() 里第一句就是 closeCodex()——这就是"闪一下就没"的全部来源。
+     手机浏览器合成 click 的 detail 有时是 0，只看 detail 挡不住，
+     所以用"指针刚结束"与"卡片开着时必须有焦点"两道闸。 */
+  if (Date.now() - lastPtrUpAt < 700) return;
+  if (e.detail > 0) return;
   const b = e.target.closest('.node');
   if (!b) return;
+  if (codex.classList.contains('is-open') && document.activeElement !== b) return;
   const i = +b.dataset.i;
   if (i === state.at && !state.walking) openCodex(i);
   else walkTo(i);
@@ -3799,11 +3816,16 @@ function enterMap() {
   setActor(0);
   updateTrail();
   progress();
-  cam.tz = innerWidth <= 760 ? clamp(innerWidth / 900, .52, .9) : clamp(innerWidth / 1900, .62, .94);
+  cam.tz = innerWidth <= 760 ? clamp(innerWidth / 780, .62, .98) : clamp(innerWidth / 1900, .62, .94);
   cam.panX = 0; cam.panY = 0;
   camGoal();
-  cam.z = cam.tz * .6;
-  cam.x = cam.tx * .94; cam.y = cam.ty;
+  if (innerWidth <= 760) {
+    /* 手机端进图即定版：不从 0.6 倍推上去，省掉那段"画面忽然放大"的观感 */
+    cam.z = cam.tz; cam.x = cam.tx; cam.y = cam.ty;
+  } else {
+    cam.z = cam.tz * .6;
+    cam.x = cam.tx * .94; cam.y = cam.ty;
+  }
   paintCam();
   setTimeout(() => toast('点建筑读图志 · 或按「继续前行」开走', 3200), 1100);
 }
@@ -3823,15 +3845,18 @@ function resetMap() {
 }
 
 /* 地图拖拽与缩放：先不抢指针，确认是"拖"之后才 capture，否则门收不到 click */
-let mapDrag = null, justTapped = 0;
+let mapDrag = null, justTapped = 0, lastPtrUpAt = 0;
 mapView.addEventListener('pointerdown', e => {
   if (e.target.closest('.map-hud')) return;
-  mapDrag = { x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, moved: false, id: e.pointerId };
+  mapDrag = { x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, moved: false,
+              t0: performance.now(), id: e.pointerId, type: e.pointerType || 'mouse' };
 });
 mapView.addEventListener('pointermove', e => {
   if (!mapDrag) return;
   if (!mapDrag.moved) {
-    if (Math.abs(e.clientX - mapDrag.sx) + Math.abs(e.clientY - mapDrag.sy) < 6) return;
+    /* 手指抖动常有 5–12px，鼠标 6px 足够；触摸放宽到 14px，否则轻点会被当成拖拽 */
+    const slop = (mapDrag.type === 'touch' || mapDrag.type === 'pen') ? 14 : 6;
+    if (Math.abs(e.clientX - mapDrag.sx) + Math.abs(e.clientY - mapDrag.sy) < slop) return;
     mapDrag.moved = true;
     try { mapView.setPointerCapture(e.pointerId); } catch (_) { }
     mapView.style.cursor = 'grabbing';
@@ -3843,22 +3868,55 @@ mapView.addEventListener('pointermove', e => {
   cam.x = cam.tx; cam.y = cam.ty;
   paintCam();
 });
+/* 命中判定：先按坐标点栈找，再按屏幕距离兜底（手机上门牌很小，点偏是常态） */
+function nodeHitTarget(x, y) {
+  const stack = document.elementsFromPoint(x, y) || [];
+  for (let k = 0; k < stack.length; k++) {
+    const el = stack[k];
+    if (el.closest && el.closest('.node')) return el.closest('.node');
+  }
+  let best = null, bestD = 1e9;
+  nodesEl.querySelectorAll('.node').forEach(function (b) {
+    const r = b.getBoundingClientRect();
+    if (!r.width || r.height < 2) return;
+    const dx = Math.max(r.left - x, 0, x - r.right);
+    const dy = Math.max(r.top - y, 0, y - r.bottom);
+    const d = Math.hypot(dx, dy);
+    if (d < bestD) { bestD = d; best = b; }
+  });
+  return bestD <= 28 ? best : null;
+}
+
 const mapUp = e => {
   if (!mapDrag) return;
+  lastPtrUpAt = Date.now();
   const wasDrag = mapDrag.moved;
+  /* 用按下的位置判定命中：手指抬起时若已滑开，不该点到别处的城 */
+  const sx = mapDrag.sx, sy = mapDrag.sy, held = performance.now() - mapDrag.t0,
+        ptype = mapDrag.type;
   mapDrag = null;
   mapView.style.cursor = '';
   if (wasDrag) { try { mapView.releasePointerCapture(e.pointerId); } catch (_) { } return; }
+  /* 图志已经打开时，手指在地图上的任何触摸都不再接管：
+     一点抖动、系统补发的一个手势，都曾把刚打开的卡片关掉。
+     收起只认 ✕ / 继续前行 / 上一处 这几个明确的按钮；鼠标点击不受此限。 */
+  if (codex.classList.contains('is-open') && (ptype === 'touch' || ptype === 'pen')) return;
+  if (held > 700) return;                        /* 按太久，是长按不是点击 */
   /* 兜底命中测试：万一浏览器把 click 吞了，这里也能把门点开 */
-  const hit = document.elementFromPoint(e.clientX, e.clientY);
-  const btn = hit && hit.closest ? hit.closest('.node') : null;
+  const btn = nodeHitTarget(sx, sy);
   if (!btn) return;
   justTapped = Date.now();
   const i = +btn.dataset.i;
   if (i === state.at && !state.walking) openCodex(i); else walkTo(i);
 };
 mapView.addEventListener('pointerup', mapUp);
-mapView.addEventListener('pointercancel', mapUp);
+/* 手势被系统接管（来电、切后台、内核把手势判给滚动）时只清状态，绝不当成点击：
+   以前这里直接调用 mapUp，会在取消点做命中测试，于是手指底下的另一座城被点中 */
+mapView.addEventListener('pointercancel', () => {
+  lastPtrUpAt = Date.now();
+  mapDrag = null;
+  mapView.style.cursor = '';
+});
 mapView.addEventListener('wheel', e => {
   e.preventDefault();
   cam.tz = clamp(cam.tz * (e.deltaY > 0 ? .92 : 1.08), .3, 1.6);
@@ -3897,13 +3955,23 @@ addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') { e.preventDefault(); prevAction(); }
 });
 
+/* 兜底：任何情况下文档被滚动（软键盘、地址栏、外来手势），立刻归位，
+   保证三卷的画面与图志卡片始终贴在视口上 */
+addEventListener('scroll', function () {
+  if (document.documentElement.scrollTop || document.body.scrollTop || window.scrollY) {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }
+}, { passive: true });
+
 /* 尺寸 */
 function onResize() {
   sizeSky();
   sizeGlobe();
   if (state.stage === 1) computeSiteScale();
   if (mapBuilt) {
-    cam.tz = innerWidth <= 760 ? clamp(innerWidth / 900, .52, .9) : clamp(innerWidth / 1900, .62, .94);
+    cam.tz = innerWidth <= 760 ? clamp(innerWidth / 780, .62, .98) : clamp(innerWidth / 1900, .62, .94);
     camGoal(); paintCam();
   }
 }
