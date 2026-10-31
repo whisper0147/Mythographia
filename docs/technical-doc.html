@@ -123,7 +123,7 @@
     <b>团队</b>　垚谷队（西安交通大学）　　　<b>成员</b>　闫锦诚 · 张嘉伟 · 史马睿<br>
     <b>指导教师</b>　无　　　<b>联系</b>　1700140371@qq.com<br>
     <b>形态</b>　单页静态站点 + Serverless 函数（零运行时依赖）<br>
-    <b>篇幅</b>　正文 8 章 · 2 幅架构图 · 24 张表
+    <b>篇幅</b>　正文 8 章 · 2 幅架构图 · 25 张表
   </div>
 </section>
 
@@ -636,14 +636,38 @@ wedge(rotY, wBot, {inner, outer, topW}, yTop, yBot)  // 斜屋面：竖直面板
     <tr><td>T8</td><td>断网打开 index.html</td><td>全部内容可读</td><td>通过</td></tr>
   </table>
 
-  <h3>6.3 部署流程</h3>
+  <h3>6.3 部署流程：国内与海外双链路</h3>
+  <p>
+    同一份 <code>index.html</code> 可同时部署在国内与海外两套基础设施上，差别只有一行：
+    <code>window.MYTHOS_API</code> 指向哪条代理。前端、知识库、内容完全复用，改一处两站同步。
+  </p>
+  <table>
+    <tr><th style="width:14%">链路</th><th style="width:28%">静态托管</th><th style="width:30%">AI 代理</th><th>适用场景</th></tr>
+    <tr><td>国内</td><td>腾讯云 CloudBase 静态网站托管</td><td>腾讯云 SCF 事件函数</td><td>评审在国内，访问稳定</td></tr>
+    <tr><td>海外</td><td>Vercel</td><td>Vercel Serverless Function</td><td>海外访问与备份</td></tr>
+  </table>
+
+  <h4>（一）海外链路：Vercel</h4>
   <ol>
     <li>安装 Node.js ≥ 18，克隆仓库；</li>
     <li><code>npx vercel login</code> → <code>npx vercel --prod</code>；</li>
-    <li>平台 Settings → Environment Variables 添加 <code>DIFY_API_KEY</code>（可选 <code>DIFY_ENDPOINT</code>、<code>ALLOW_ORIGIN</code>）；</li>
+    <li>Settings → Environment Variables 添加 <code>DIFY_API_KEY</code>（可选 <code>DIFY_ENDPOINT</code>、<code>ALLOW_ORIGIN</code>）；</li>
     <li>Redeploy 使环境变量生效；</li>
     <li>验收：线上提问返回 200，响应体不含任何密钥；断网或未配 Key 时页面仍完整可读。</li>
   </ol>
+
+  <h4>（二）国内链路：腾讯云静态托管 + SCF 云函数</h4>
+  <ol>
+    <li>云开发控制台开通静态网站托管，上传 <code>index.html</code> 与 <code>myth-traveler.html</code>；</li>
+    <li>在 SCF 主站新建事件函数，粘贴仓库中的 <code>scf/index.js</code>（Node.js）或 <code>scf/index.py</code>（Python），入口为 <code>index.main_handler</code>；</li>
+    <li>函数配置中设置环境变量 <code>DIFY_API_KEY</code>，执行超时设为 30 秒；</li>
+    <li>开启函数 URL 公网访问，把地址写入 <code>index.html</code> 的 <code>window.MYTHOS_API</code>；</li>
+    <li>验收：浏览器打开函数地址返回 <code>{"ok":true}</code>；站点提问 30 秒内返回答案。</li>
+  </ol>
+  <p>
+    两条链路共用同一套前端与知识库，密钥都不进入前端：海外存于 Vercel 环境变量，国内存于云函数环境变量。
+    代理层同样自带跨域头、单 IP 限流（每分钟 30 次）与检索来源编号映射，两端行为一致。
+  </p>
 
   <h3>6.4 运维与排错</h3>
   <table>
@@ -653,6 +677,10 @@ wedge(rotY, wBot, {inner, outer, topW}, yTop, yBot)  // 斜屋面：竖直面板
     <tr><td>提问一直走词条</td><td><code>file://</code> 打开，或代理报错降级</td><td>用 http(s) 打开；看 Network 中 <code>chat</code> 响应</td></tr>
     <tr><td>401</td><td>Key 失效</td><td>重新签发并更新环境变量</td></tr>
     <tr><td>卷四空白</td><td>iframe 被扩展拦截</td><td>换浏览器或关闭拦截</td></tr>
+    <tr><td>云函数 3 秒被中断</td><td>CloudBase 免费版限制超时</td><td>改用 SCF 主站事件函数，超时改 30 秒</td></tr>
+    <tr><td>函数报 <code>invalid character</code></td><td>运行时为 Python 却粘贴了 JS</td><td>改贴 <code>scf/index.py</code>，或换 Node.js 运行时</td></tr>
+    <tr><td>开 HTTP 网关提示购买套餐</td><td>网关不在免费额度内</td><td>改用函数 URL 公网访问，绕开网关</td></tr>
+    <tr><td>国内站问询退回词条</td><td><code>window.MYTHOS_API</code> 为空或上传了旧文件</td><td>确认线上源码含云函数地址后重新上传</td></tr>
   </table>
 </section>
 
