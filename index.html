@@ -781,6 +781,9 @@ textarea:focus{outline:none;border-color:rgba(217,169,78,.6);box-shadow:0 0 0 3p
   .actions .btn-ghost .lbl{display:none}
 }
 @media (max-width:680px){
+  /* 单列时 wide 图不再拉开比例，否则像一条细带 */
+  .plate-fig.wide .art{aspect-ratio:16/10}
+  .gallery{grid-auto-columns:0}
   .topbar{gap:10px;padding:0 14px}
   .brand-seal{width:32px;height:32px;font-size:.9rem}
   .brand-text b{font-size:.6rem;letter-spacing:.2em}
@@ -833,7 +836,7 @@ textarea:focus{outline:none;border-color:rgba(217,169,78,.6);box-shadow:0 0 0 3p
   content:"";position:absolute;left:0;right:0;bottom:0;height:38%;z-index:2;pointer-events:none;
   background:linear-gradient(180deg,transparent,rgba(10,6,22,.55));
 }
-.plate-fig.wide{grid-column:span 2}
+.plate-fig.wide{grid-column:1 / -1}
 .plate-fig.wide .art{aspect-ratio:16/6.6}
 .shelf{position:sticky;top:12px}
 .shelf-note{margin:16px 0 0;font-size:.66rem;line-height:1.9;color:rgba(154,144,178,.75);letter-spacing:.04em}
