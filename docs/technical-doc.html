@@ -91,6 +91,9 @@
   .kv span{ color:var(--muted); display:inline-block; min-width:24mm; }
   figure{ margin:0 0 4mm; page-break-inside:avoid; text-align:center; }
   svg{ max-width:100%; height:auto; }
+  figure.shot img{ display:block; max-width:100%; height:auto; margin:0 auto 2mm;
+    border:1px solid var(--line); background:#0b0718; }
+  figure.shot.tall img{ max-height:150mm; width:auto; }
   .toc{ font-size:10pt; }
   .toc li{ list-style:none; display:flex; justify-content:space-between; border-bottom:1px dotted #d8d3c8; padding:1.5mm 0; }
   .toc ul{ padding-left:0; }
@@ -123,7 +126,7 @@
     <b>团队</b>　垚谷队（西安交通大学）　　　<b>成员</b>　闫锦诚 · 张嘉伟 · 史马睿<br>
     <b>指导教师</b>　无　　　<b>联系</b>　1700140371@qq.com<br>
     <b>形态</b>　单页静态站点 + Serverless 函数（零运行时依赖）<br>
-    <b>篇幅</b>　正文 8 章 · 2 幅架构图 · 25 张表
+    <b>篇幅</b>　正文 8 章 · 5 幅插图 · 28 张表
   </div>
 </section>
 
@@ -189,6 +192,59 @@
     <tr><td>交付形态</td><td><code>index.html</code> 2.3 MB（单文件全站）+ <code>api/chat.js</code>（AI 代理）</td></tr>
     <tr><td>AI 能力</td><td>基于 Dify 知识库应用的检索增强问答，答案回链到图版编号</td></tr>
   </table>
+
+  <h3>1.4 使用方式：三步上手</h3>
+  <p>
+    站点是一个纯静态文件，打开即用：无需安装、无需注册、不采集任何个人信息，桌面端与移动端共用同一份代码。
+    线上地址与离线包的行为一致，差别只在于后者没有服务器，问答自动使用内置词条。
+  </p>
+  <table>
+    <tr><th style="width:12%">步骤</th><th style="width:38%">操作</th><th>说明</th></tr>
+    <tr><td>一</td><td>打开线上地址，或解压离线包双击 <code>index.html</code></td><td>离线状态下四卷内容完整可读，AI 退回内置词条</td></tr>
+    <tr><td>二</td><td>在卷一点一枚星标，或在卷二点任一枚谱系标签</td><td>六个体系：希腊罗马、埃及、中国、日本、爱尔兰、凯尔特</td></tr>
+    <tr><td>三</td><td>点“进入询问”提问，或点“旅程”进入卷四</td><td>问答返回答案与站点编号；旅程可点建筑读图志，也可“继续前行”逐站行走</td></tr>
+  </table>
+  <p>
+    交互约定：<code>←</code> / <code>→</code> 翻卷，<code>Esc</code> 关闭抽屉与图志卡片；
+    触屏左右滑动翻卷（卷四除外，卷内手势留给地图拖拽与卡片滚动）；地图支持滚轮或右侧按钮缩放。
+  </p>
+
+  <h3>1.5 界面实录</h3>
+  <figure class="shot">
+    <img src="fig/ui-home.jpg" alt="卷一星穹首页">
+    <div class="cap">图 1　卷一 · 星穹：六枚星标悬于同一片深空，点星进入对应谱系</div>
+  </figure>
+  <figure class="shot">
+    <img src="fig/ui-journey.jpg" alt="卷四旅程与图志卡片">
+    <div class="cap">图 2　卷四 · 旅程：等距地图上的六座门，点建筑唤出图志卡片（照片 / 神话 / 建筑形制 / 现场）</div>
+  </figure>
+  <figure class="shot tall">
+    <img src="fig/ui-mobile.jpg" alt="移动端卷四图志">
+    <div class="cap">图 3　移动端同一站点的图志卡片：底部抽屉式布局，建筑形制与出处编号完整保留</div>
+  </figure>
+
+  <h3>1.6 项目状态与沿革</h3>
+  <p>
+    <strong>发表与获奖情况：</strong>截至 2026 年 10 月 31 日，本项目为本次参赛首发，此前未在任何平台公开发表、
+    未参加其他赛事、未获得任何奖项，也不存在已上线运营的历史版本。代码与技术文档自参赛起公开于 GitHub。
+  </p>
+  <p>
+    <strong>与前作的关系：</strong>本项目由团队自主完成，未基于任何第三方项目改造。其前身是团队自己先后开发的两套原型——
+    “星穹图志”（卷一至卷三）与“神话旅人”（天球、圣殿、旅程三幕）。本版本把二者整合为一个站点，旅人以第四卷的形式并入。
+    整合过程中的主要优化如下。
+  </p>
+  <table>
+    <tr><th style="width:16%">优化项</th><th style="width:38%">整合前</th><th>本版本</th></tr>
+    <tr><td>站点形态</td><td>两个独立 HTML，合计约 3.6 MB</td><td>单文件 2.26 MB，四卷共用一个顶栏与一套状态机</td></tr>
+    <tr><td>边界隔离</td><td>同一命名空间，样式与脚本互相干扰</td><td>卷四以模板块 + 运行时还原 + <code>srcdoc</code> 隔离，零冲突</td></tr>
+    <tr><td>素材策略</td><td>部分图片外链</td><td>36 张照片内联 WebP，运行时零外部图片请求</td></tr>
+    <tr><td>入口一致性</td><td>两套顶栏、两套翻页</td><td>统一顶栏；旅人自带 bar 在卷四隐藏，翻页交给父页或卷内</td></tr>
+    <tr><td>部署方式</td><td>手工上传单文件</td><td>GitHub + 双链路托管，密钥交由平台环境变量管理</td></tr>
+  </table>
+  <p>
+    第三方内容仅两类：问答能力由 Dify 云服务提供，实景照片取自 Wikimedia Commons（逐张署名与许可见 <code>docs/ASSETS.md</code>）。
+    项目不引入任何前端框架、3D 库或 UI 组件库，六座圣殿全部由自建原语参数化生成。
+  </p>
 
   <h3>1.4 本文档结构</h3>
   <p>
@@ -302,7 +358,7 @@
       <path d="M440 105 L466 95" stroke="#a9803a" stroke-width="1.2" fill="none" marker-end="url(#ar)"/>
       <path d="M590 140 L590 162" stroke="#a9803a" stroke-width="1.2" fill="none" marker-end="url(#ar)"/>
     </svg>
-    <div class="cap">图 1　总体架构：静态站点（四卷）+ 单一代理函数 + 外部知识库应用</div>
+    <div class="cap">图 4　总体架构：静态站点（四卷）+ 单一代理函数 + 外部知识库应用</div>
   </figure>
 
   <h3>3.2 四卷状态机</h3>
@@ -465,7 +521,7 @@
       <text x="62" y="176" font-size="8.6" fill="#3a3a44">直连可用？ → 否 → 同源代理 → 失败 → 内置词条（本地 36 条问答）</text>
       <text x="12" y="196" font-size="8.2" fill="#6b6b78">返回体统一为 { answer, conversation_id, sources:[{code}] }，前端不感知后端形态</text>
     </svg>
-    <div class="cap">图 2　AI 请求链路与三级降级</div>
+    <div class="cap">图 5　AI 请求链路与三级降级</div>
   </figure>
 
   <h4>请求契约</h4>
@@ -533,6 +589,28 @@ POST /api/chat
 
 <!-- ================= 5 核心功能实现 ================= -->
 <section class="page">
+  <h3>4.9 落地使用情况与实测记录</h3>
+  <p>
+    本节记录 AI 能力在线上环境里的实际运行状况，数据来自部署后的真实调用，不是演示脚本。
+    线上形态是一套静态托管加一个云函数代理，两个部署入口共用同一个函数与同一套知识库。
+  </p>
+  <table>
+    <tr><th style="width:24%">场景</th><th style="width:46%">实际表现</th><th>依据</th></tr>
+    <tr><td>提问命中知识库</td><td>返回 150 至 350 字的结构化回答，正文含站点编号（如 GR-02），并区分文本记载、考古实测与后世附会</td><td>线上真实调用记录</td></tr>
+    <tr><td>提问超出收录范围</td><td>按提示词给出边界说明，不编造具体数值；必要时反问方向</td><td>线上真实调用记录</td></tr>
+    <tr><td>代理不可用</td><td>前端降级为内置词条，页面不空白，仍可作答</td><td>断网与 <code>file://</code> 两种情形实测</td></tr>
+    <tr><td>超时保护</td><td>前端 30 秒中断，云函数执行上限 30 秒，两端对齐；实测单次问答在 5 至 12 秒内返回</td><td>代码配置与调用计时</td></tr>
+    <tr><td>滥用防护</td><td>单 IP 每分钟 30 次，超出返回 429；请求体长度与字段做白名单校验</td><td>代理层实现</td></tr>
+  </table>
+  <p>
+    <strong>成本与配额：</strong>云函数按调用计费，参赛演示的实际调用量为日均数十次，远低于免费额度；
+    密钥只存在于函数环境变量中，前端与仓库都不含密钥，可用源码检索验证。
+  </p>
+  <p>
+    <strong>已知边界：</strong>知识库文档命名尚未统一为“编号 + 站点名”的格式，导致部分回答的检索来源编号回填为空——
+    这会影响图志右下角出处标签的显示，但不影响答案本身；后续只需规范文档命名即可修复，无需改动代码。
+  </p>
+
   <h2><span class="no">05</span>核心功能实现</h2>
 
   <h3>5.1 星穹：canvas 与 DOM 的混合</h3>
